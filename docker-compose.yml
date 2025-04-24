@@ -1,0 +1,97 @@
+services:
+  mariadb:
+    image: mariadb:10.11
+    container_name: my_mariadb_container
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: secret123
+      MARIADB_DATABASE: daamdb
+      MARIADB_USER: root
+      MARIADB_PASSWORD: secret123
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
+  auth-service:
+    image: eclipse-temurin:21-jdk-jammy
+    container_name: auth_service
+    restart: unless-stopped
+    environment:
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_NAME=daamdb
+      - DB_USER=root
+      - DB_PASSWORD=secret123
+      - SERVER_PORT=9000
+    volumes:
+      - ./java_backend/Auth:/app
+    working_dir: /app
+    command: java -jar ./daam-auth-0.0.1-SNAPSHOT.jar
+    ports:
+      - "9000:9000"
+    depends_on:
+      - mariadb
+    networks:
+      - app-network
+
+  backend-service:
+    image: eclipse-temurin:21-jdk-jammy
+    container_name: backend_service
+    restart: unless-stopped
+    environment:
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_NAME=daamdb
+      - DB_USER=root
+      - DB_PASSWORD=secret123
+      - SERVER_PORT=8080
+      - DEBUG_LEVEL=INFO
+      - DAAM_SEC=false
+      - DB_DDL=update
+      - DB_INIT=always
+      - DB_ON_ERR=true
+      - SEC_DEBUG=INFO
+      - SPRINGDOC_SWAGGER_UI_PATH=/swagger-ui.html
+      - SPRINGDOC_API_DOCS_PATH=/api-docs
+    volumes:
+      - ./java_backend/Server:/app
+    working_dir: /app
+    command: java -jar ./daamsrv-0.0.1-SNAPSHOT.jar
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mariadb
+      - auth-service
+    networks:
+      - app-network
+
+  ui-client:
+    image: node:latest
+    container_name: ui_client
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_AUTH_API_URL=http://auth-service:9000
+      - NEXT_PUBLIC_DAAM_API_URL=http://backend-service:8080
+    volumes:
+      - ./ui-client:/app
+    working_dir: /app
+    command: sh -c "npm install -g pnpm && pnpm install && pnpm run dev"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth-service
+      - backend-service
+    networks:
+      - app-network
+
+volumes:
+  mariadb_data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

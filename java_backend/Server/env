@@ -1,0 +1,12 @@
+export DB_HOST=localhost
+# export DB_PORT=3306
+# export DB_USER=root
+# export DB_PASSWORD=secret123
+# export DB_NAME=daamdb
+# export SERVER_PORT=8080
+# export DEBUG_LEVEL=INFO
+export DAAM_SEC=false # Security turned off
+# export DB_DDL=update
+# export DB_INIT=always
+# export DB_ON_ERR=true
+# export SEC_DEBUG=DEBUG
