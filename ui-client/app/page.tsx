@@ -1,9 +1,14 @@
 // ui-client/app/page.tsx
-'use client';
+// NO 'use client' directive here - this remains a Server Component
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-// Define the MenuItem type based on the OpenAPI spec
+// Import the separated client components
+import { AnimatedTitle } from '@/components/AnimatedTitle';
+// Import the new DisplayMenu client component
+import DisplayMenu from '@/components/DisplayMenu'; // Use default import
+
+// Define the MenuItem type (can be shared or defined here)
 type MenuItem = {
   id: number;
   name: string;
@@ -14,60 +19,49 @@ type MenuItem = {
   available: boolean;
 };
 
-export default function HomePage() {
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+// --- HomePage Component (Server Component) ---
+// Fetches initial data and renders client components for display/interaction
+export default async function HomePage() {
+  let menuItems: MenuItem[] | undefined;
+  let errorMessage: string | undefined;
 
-  useEffect(() => {
-    async function fetchMenuItems() {
-      setLoading(true);
-      setError(null);
-      try {
-        // Fetch menu items from the backend service
-        // Ensure your backend service is running and accessible at this URL
-        // Note: Using NEXT_PUBLIC_DAAM_API_URL environment variable if set, otherwise defaulting to localhost:8080
-        const apiUrl = process.env.NEXT_PUBLIC_DAAM_API_URL || 'http://localhost:8080';
-        const response = await fetch(`${apiUrl}/api/menuitems`);
+  // Fetch URL uses service name for server-side fetch
+  const backendApiUrl = 'http://backend-service:8080/api/menuitems';
+  console.log(`Fetching menu items from (server-side): ${backendApiUrl}`);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+  try {
+    const res = await fetch(backendApiUrl, { cache: 'no-store' });
 
-        const data: MenuItem[] = await response.json();
-        setMenuItems(data);
-      } catch (e: any) {
-        console.error("Failed to fetch menu items:", e);
-        setError(`Failed to load menu items. Please ensure the backend service is running and accessible. Error: ${e.message}`);
-      } finally {
-        setLoading(false);
-      }
+    if (!res.ok) {
+      const errorBody = await res.text();
+      console.error(`HTTP error! status: ${res.status}, statusText: ${res.statusText}, body: ${errorBody}`);
+      throw new Error(`HTTP error! status: ${res.status} ${res.statusText}. Response: ${errorBody || '(empty response body)'}`);
     }
 
-    fetchMenuItems();
-  }, []); // Empty dependency array means this effect runs once on mount
+    const contentType = res.headers.get("content-type");
+    if (contentType && contentType.indexOf("application/json") !== -1) {
+        menuItems = await res.json() as MenuItem[];
+        console.log("Menu items fetched successfully (server-side):", menuItems?.length);
+    } else {
+        const textResponse = await res.text();
+        console.error("Received non-JSON response:", textResponse);
+        throw new Error(`Expected JSON response but received content type: ${contentType}. Response body: ${textResponse}`);
+    }
 
+  } catch (error: any) {
+    console.error("Server-side fetch error:", error);
+    errorMessage = error.message || 'An unknown error occurred while fetching menu items.';
+     if (error.cause) { errorMessage += ` Cause: ${error.cause}`; }
+  }
+
+  // Render the layout and pass server-fetched data to the Client Component
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start p-6 md:p-12 lg:p-24 bg-background text-foreground">
-      <h1 className="text-4xl font-bold mb-8">Dinner and a Movie - Menu</h1>
+      <main className="flex min-h-screen flex-col items-center justify-start p-4 md:p-8 lg:p-12 bg-gradient-to-b from-background to-muted/50 text-foreground">
+        {/* AnimatedTitle is already a Client Component */}
+        <AnimatedTitle />
 
-      {loading && <p className="text-lg">Loading menu...</p>}
-
-      {error && <p className="text-lg text-red-500">{error}</p>}
-
-      {!loading && !error && (
-        <div className="w-full max-w-4xl">
-          <h2 className="text-2xl font-semibold mb-4">Menu Items Fetched:</h2>
-          {menuItems.length > 0 ? (
-            <pre className="bg-muted p-4 rounded-md overflow-x-auto text-sm">
-              {/* Displaying raw JSON for verification */}
-              {JSON.stringify(menuItems, null, 2)}
-            </pre>
-          ) : (
-            <p>No menu items found.</p>
-          )}
-        </div>
-      )}
-    </main>
+        {/* Render DisplayMenu (Client Component) and pass initial props */}
+        <DisplayMenu initialItems={menuItems} fetchError={errorMessage} />
+      </main>
   );
 }
