@@ -1,6 +1,7 @@
 // ui-client/components/FormattedDate.tsx
 'use client';
 
+import React, { useEffect } from 'react'; // Added useEffect for logging
 import { format } from 'date-fns';
 
 interface FormattedDateProps {
@@ -19,7 +20,7 @@ const formatDateInternal = (dateString: string | null | undefined): string => {
              return "Invalid Date";
         }
         // Use a consistent format string
-        return format(date, 'MMM d, yyyy h:mm a');
+        return format(date, 'MMM d, yyyy h:mm a'); // Corrected format string
     } catch (e) {
         console.error(`FormattedDate error for input "${dateString}":`, e);
         return "Invalid Date";
@@ -28,6 +29,11 @@ const formatDateInternal = (dateString: string | null | undefined): string => {
 
 
 export function FormattedDate({ dateString }: FormattedDateProps) {
+  // Log the prop received on the client side
+  useEffect(() => {
+    console.log(`FormattedDate component received dateString prop: "${dateString}" (Type: ${typeof dateString})`);
+  }, [dateString]);
+
   // Formatting happens during client render
   return <>{formatDateInternal(dateString)}</>;
 }
