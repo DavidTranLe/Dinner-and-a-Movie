@@ -20,20 +20,19 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Eye, ArrowUpDown, Search } from 'lucide-react';
 
-import FormattedDate from './FormattedDate';
+// Import the new component
+import FormattedDate from './FormattedDate'; // Adjust path if needed
 
 // --- Types ---
 type Order = {
-    id: number; userid: number; ordertime: string; pickuptime: string; area: string | null; location: string | null;
-    tax: number; tip: number; pan: string; expiryMonth: number; expiryYear: number; status: string | null;
+    id: number; userid: number; ordertime: string; pickuptime: string; area: string | null; location: string | null; // Added null possibility
+    tax: number; tip: number; pan: string; expiryMonth: number; expiryYear: number; status: string | null; // Added null possibility
 };
 
 // --- Helper Functions ---
-// Removed formatCurrency as total is removed
-// const formatCurrency = (amount: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+const formatCurrency = (amount: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 const getStatusVariant = (status: string | null | undefined): "default" | "secondary" | "destructive" | "outline" => { switch (status?.toLowerCase()) { case 'completed': return 'default'; case 'pending': return 'secondary'; case 'cancelled': return 'destructive'; default: return 'outline'; } };
-// Removed calculateApproxTotal
-// const calculateApproxTotal = (order: Order) => order.tax + order.tip;
+const calculateApproxTotal = (order: Order) => order.tax + order.tip;
 
 // --- Animation Variants ---
 const tableContainerVariants = { hidden: { opacity: 1 }, visible: { opacity: 1, transition: { staggerChildren: 0.05 } } };
@@ -71,7 +70,6 @@ export function OrderHistoryTable({ initialOrders }: OrderHistoryTableProps) {
                 case 'pickuptime': valA = new Date(a.pickuptime); valB = new Date(b.pickuptime); break;
                 case 'status': valA = a.status ?? ''; valB = b.status ?? ''; break;
                 // Removed 'total' case
-                // case 'total': valA = calculateApproxTotal(a); valB = calculateApproxTotal(b); break;
                 default: valA = new Date(a.ordertime); valB = new Date(b.ordertime); break;
             }
             if (valA instanceof Date && isNaN(valA.getTime())) valA = sortDirection === 'asc' ? Infinity : -Infinity;
@@ -121,6 +119,7 @@ export function OrderHistoryTable({ initialOrders }: OrderHistoryTableProps) {
                                 <TableRow> <TableCell colSpan={5} className="h-24 text-center"> {filterText ? 'No orders match your filter.' : 'No orders placed yet.'} </TableCell> </TableRow>
                             ) : (
                                 filteredAndSortedOrders.map((order, index) => (
+                                     // Ensure no whitespace between motion.tr and TableCell, or between TableCells
                                      <motion.tr key={order.id} variants={tableRowVariants} exit="exit" layout className="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors"
                                         ><TableCell className="font-medium">#{order.id}</TableCell
                                         ><TableCell suppressHydrationWarning={true}><FormattedDate dateString={order.ordertime} /></TableCell
