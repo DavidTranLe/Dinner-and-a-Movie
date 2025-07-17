@@ -234,3 +234,5 @@ The default for the application is to run with authentication, so you can simply
 Things to implement:
 - [ ] Add a service layer to the resource server so that controllers do not directly access the repositories.
 - [ ] DTO objects for the resource server.
+- [ ] Add Security with Spring Security to the resource server.
+- [ ] Implement Auth with JWT tokens. 
