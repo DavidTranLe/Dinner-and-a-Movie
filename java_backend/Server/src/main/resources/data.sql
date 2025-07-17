@@ -1,5 +1,3 @@
--- Corrected INSERT statements with proper table names and syntax
-
 -- Users Table
 INSERT INTO users (ID,USERNAME, PASSWORD, FIRST, LAST, PHONE, EMAIL, IMAGE_URL, PAN, EXPIRY_MONTH, EXPIRY_YEAR, ROLES) VALUES (1, 'admin', '$2a$12$sPUi2kLGlu.YcCV9cfnE.uzJiPOR/G1sRHZcwV3agV9ScZReaY3VO', 'Administrator', 'User', '(555) 943-2230', 'admin@daam.com', 'https://minimaltoolkit.com/images/randomdata/female/70.jpg', '', 6, 2025, 'ROLE_ADMIN');
 INSERT INTO users (ID,USERNAME, password, FIRST, LAST, PHONE, EMAIL, IMAGE_URL, PAN, EXPIRY_MONTH, EXPIRY_YEAR, ROLES) VALUES (2, 'cmac', '$2a$12$sPUi2kLGlu.YcCV9cfnE.uzJiPOR/G1sRHZcwV3agV9ScZReaY3VO', 'Caitlin', 'McIntyre', '(555) 442-2093', 'cmac@daam.com', 'https://minimaltoolkit.com/images/randomdata/female/71.jpg', '4332-1234-1234-1234', 6, 2025, 'ROLE_ADMIN');
@@ -7,7 +5,7 @@ INSERT INTO users (ID,USERNAME, password, FIRST, LAST, PHONE, EMAIL, IMAGE_URL, 
 INSERT INTO users (ID,USERNAME, password, FIRST, LAST, PHONE, EMAIL, IMAGE_URL, ROLES) VALUES (4, 'server1', '$2a$12$sPUi2kLGlu.YcCV9cfnE.uzJiPOR/G1sRHZcwV3agV9ScZReaY3VO', 'Jo', 'Server', '(555) 443-4567', 'server1@daam.com', 'https://minimaltoolkit.com/images/randomdata/female/9.jpg', 'ROLE_SERVER');
 INSERT INTO users (ID,USERNAME, password, FIRST, LAST, PHONE, EMAIL, IMAGE_URL, ROLES) VALUES (5, 'server2', '$2a$12$sPUi2kLGlu.YcCV9cfnE.uzJiPOR/G1sRHZcwV3agV9ScZReaY3VO', 'Lee', 'Server', '(555) 123-4954', 'server2@daam.com', 'https://minimaltoolkit.com/images/randomdata/male/9.jpg', 'ROLE_SERVER');
 
--- MenuItems Table (Corrected table name to menu_item)
+-- MenuItems Table
 INSERT INTO menu_item (id, name, description, category, price, imageurl, available) VALUES (1, 'Bison Burger', 'Packed with protein and a touch of sweetness, it''s topped with your choice of cheese and classic burger fixings. Lean, humanely raised meat for those who are more health-conscious.', 'entrees', 11.54, '/images/food/burger_1.jpg', 1);
 INSERT INTO menu_item (id, name, description, category, price, imageurl, available) VALUES (2, 'Southwest Burger', 'Inspired by the spices of Tex-Mex, this one will light you up! Juicy patty seasoned with chili, cumin, and coriander, topped with pepper jack cheese, chipotle mayo, and fresh pico de gallo.', 'entrees', 10.7, '/images/food/burger_2.jpg', 1);
 INSERT INTO menu_item (id, name, description, category, price, imageurl, available) VALUES (3, 'Philly Burger', 'Philly cheesesteak flavor on a juicy burger! Shaved ribeye joins melty provolone, grilled onions, and peppers for a cheeseburger that''s anything but ordinary.', 'entrees', 15.54, '/images/food/burger_3.jpg', 1);
@@ -23,14 +21,14 @@ INSERT INTO menu_item (id, name, description, category, price, imageurl, availab
 INSERT INTO menu_item (id, name, description, category, price, imageurl, available) VALUES (13, 'Vegetarian Dumpling Soup', 'Indulge in the comforting embrace of our reconstructed ''pho''; Vegetarian Dumpling Soup. This delightful dish combines a fragrant, hearty vegetable broth with plump, handmade dumplings that burst with flavor. The dumplings are filled with a medley of finely chopped vegetables, offering a satisfying, savory bite with each spoonful. Tender, simmered vegetables float gracefully in the aromatic broth, creating a nourishing and soul-warming experience. Topped with a sprinkle of fresh herbs, this soup is a celebration of wholesome goodness, a perfect harmony of taste and texture for vegetarians and soup lovers alike.', 'pho', 12.24, '/images/food/pho_2.jpg', 1);
 INSERT INTO menu_item (id, name, description, category, price, imageurl, available) VALUES (14, 'Coconut-Curry Lobster Dumpling Soup', 'Savor the exotic flavors of our Coconut-Curry Lobster Dumpling Soup, a culinary masterpiece that takes your taste buds on a journey to paradise. A rich, velvety coconut-curry broth forms the luxurious base, infused with the fragrant spices of the East. Nestled within this aromatic elixir are succulent lobster dumplings, each bite revealing tender, perfectly cooked lobster meat wrapped in delicate dumpling skin. Alongside, you''ll find baby potatoes, soft and creamy, providing a comforting contrast to the bold flavors of the soup. This dish is a harmonious blend of indulgence and sophistication, a true celebration of the sea and global culinary inspiration in every luscious spoonful.', 'pho', 10, '/images/food/pho_3.jpg', 1);
 
--- Orders Table (Corrected timestamp format)
+-- Orders Table
 INSERT INTO orders (id, userid, ordertime, pickuptime, area, location, tax, tip, pan, expiry_month, expiry_year, status) VALUES (1001, 3, '2024-08-01 11:42:25', '2024-08-01 11:51:47', 'Theater 1', 'Table 37', 5.33, 12.93, '4026664388908977', 9, 2028, 'completed');
 INSERT INTO orders (id, userid, ordertime, pickuptime, area, location, tax, tip, pan, expiry_month, expiry_year, status) VALUES (1002, 3, '2024-08-02 12:00:00', NULL, 'Theater 1', 'Table 32', 1.01, 2.46, '5182958648591491', 5, 2024, 'problem');
 INSERT INTO orders (id, userid, ordertime, pickuptime, area, location, tax, tip, pan, expiry_month, expiry_year, status) VALUES (1003, 3, '2024-08-03 13:00:00', NULL, 'Theater 1', 'Table 33', 2.17, 5.26, '201447805801057', 9, 2026, 'readyForGuest');
 INSERT INTO orders (id, userid, ordertime, pickuptime, area, location, tax, tip, pan, expiry_month, expiry_year, status) VALUES (1004, 3, '2024-08-04 14:00:00', NULL, 'Theater 1', 'Table 16', 4.94, 11.99, '5137069438784126', 8, 2027, 'readyForGuest');
 INSERT INTO orders (id, userid, ordertime, pickuptime, area, location, tax, tip, pan, expiry_month, expiry_year, status) VALUES (1005, 3, '2024-08-05 15:00:00', NULL, 'Theater 1', 'Table 34', 3.52, 8.53, '30004888442197', 2, 2026, 'new');
 
--- Items Table (Corrected itemid values to match existing menu_items)
+-- Items Table
 INSERT INTO item (id, orderid, itemid, price, firstname, notes) VALUES (1, 1001, 4, 5.1, 'Nora', '');
 INSERT INTO item (id, orderid, itemid, price, firstname, notes) VALUES (2, 1001, 2, 10.74, 'Carlos', 'Ci mawone icafo nujuluk sivpa muksuco menur agabucen tom marbofzu cune nure fizo.');
 INSERT INTO item (id, orderid, itemid, price, firstname, notes) VALUES (3, 1001, 14, 14.55, 'Timothy', '');
