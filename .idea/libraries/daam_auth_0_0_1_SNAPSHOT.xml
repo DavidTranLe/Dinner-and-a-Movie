@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="daam-auth-0.0.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/java_backend/old_Auth/daam-auth-0.0.1-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
