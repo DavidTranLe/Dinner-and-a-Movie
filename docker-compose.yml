@@ -15,56 +15,21 @@ services:
     networks:
       - app-network
 
-  auth-service:
-    image: eclipse-temurin:21-jdk-jammy
-    container_name: auth_service
-    restart: unless-stopped
-    environment:
-      - DB_HOST=mariadb
-      - DB_PORT=3306
-      - DB_NAME=daamdb
-      - DB_USER=root
-      - DB_PASSWORD=secret123
-      - SERVER_PORT=9000
-    volumes:
-      - ./java_backend/Auth:/app
-    working_dir: /app
-    command: java -jar ./daam-auth-0.0.1-SNAPSHOT.jar
-    ports:
-      - "9000:9000"
-    depends_on:
-      - mariadb
-    networks:
-      - app-network
-
   backend-service:
-    image: eclipse-temurin:21-jdk-jammy
+
+    build:
+      context: ./java_backend/server
+      dockerfile: Dockerfile
     container_name: backend_service
     restart: unless-stopped
     environment:
-      - DB_HOST=mariadb
-      - DB_PORT=3306
-      - DB_NAME=daamdb
-      - DB_USER=root
-      - DB_PASSWORD=secret123
-      - SERVER_PORT=8080
-      - DEBUG_LEVEL=INFO
-      - DAAM_SEC=false
-      - DB_DDL=update
-      - DB_INIT=always
-      - DB_ON_ERR=true
-      - SEC_DEBUG=INFO
-      - SPRINGDOC_SWAGGER_UI_PATH=/swagger-ui.html
-      - SPRINGDOC_API_DOCS_PATH=/api-docs
-    volumes:
-      - ./java_backend/Server:/app
-    working_dir: /app
-    command: java -jar ./daamsrv-0.0.1-SNAPSHOT.jar
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb:3306/daamdb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=secret123
     ports:
       - "8080:8080"
     depends_on:
       - mariadb
-      - auth-service
     networks:
       - app-network
 
@@ -73,8 +38,6 @@ services:
     container_name: ui_client
     restart: unless-stopped
     environment:
-      - NODE_ENV=development
-      - NEXT_PUBLIC_AUTH_API_URL=http://auth-service:9000
       - NEXT_PUBLIC_DAAM_API_URL=http://backend-service:8080
     volumes:
       - ./ui-client:/app
@@ -83,7 +46,6 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - auth-service
       - backend-service
     networks:
       - app-network
