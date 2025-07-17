@@ -229,3 +229,8 @@ Ensure that you set the environment variable **export DAAM_SEC=true** before run
 The default for the application is to run with authentication, so you can simply unset the DAAM_SEC environment variable.
 
 **NOTE:** You cannot view the SWAGGER UI API documentation with security turned on.
+
+
+Things to implement:
+- [ ] Add a service layer to the resource server so that controllers do not directly access the repositories.
+- [ ] DTO objects for the resource server.
