@@ -23,8 +23,8 @@ public class MenuItem {
     private String category;
     @Column(nullable = false)
     private Double price;
-    @JsonProperty("imageurl") // Controls JSON output to match frontend
-    @Column(name = "imageurl") // Controls the DATABASE column name to match SQL script
+    @JsonProperty("imageurl")
+    @Column(name = "imageurl")
     private String imageUrl;
     @Column(nullable = false)
     private boolean available;

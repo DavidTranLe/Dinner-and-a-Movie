@@ -42,6 +42,12 @@ export async function placeOrderAction(
 
     // Prepare the main order payload (including payment details)
     const orderPayload = {
+        // --- FIX STARTS HERE ---
+        // Hardcode the userid for now. In a real application with logins,
+        // this would be retrieved from the user's session.
+        userid: 3,
+        // --- FIX ENDS HERE ---
+
         ...paymentDetails, // Spread PAN, expiryMonth, expiryYear
         ordertime: new Date().toISOString(),
         pickuptime: new Date(Date.now() + 15 * 60 * 1000).toISOString(), // 15 mins later

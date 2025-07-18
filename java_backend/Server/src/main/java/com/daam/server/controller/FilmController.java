@@ -43,7 +43,6 @@ public class FilmController {
                 .orElseThrow(() -> new EntityNotFoundException("Film not found with id: " + id));
 
         film.setTitle(filmDetails.getTitle());
-        // ... update other fields as needed
 
         Film updatedFilm = filmRepository.save(film);
         return ResponseEntity.ok(updatedFilm);
